@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 public class Generator
 {
+    // command line: -package=amfibians.ui.wrapper.generated android.widget.TextView
+    // work folder: .../amfibian-ui-wrapper/src/main/java/amfibians/ui/wrapper/generated
 
     static String OPT = "-package=";
 
@@ -55,7 +57,11 @@ public class Generator
 //if( "onConfigurationChanged".equals( m.getName() ))
 //    System.out.println( "onConfigurationChanged" );
             print( "\t" );
-            if( !Modifier.isPublic( m.getModifiers()) || m.getExceptionTypes().length >0 )
+            if  (  !Modifier.isPublic( m.getModifiers())
+                || m.getExceptionTypes().length >0
+                || m.getReturnType().getCanonicalName().startsWith("android.")
+                || Arrays.stream(m.getParameters()).filter( p-> p.getType().getName().startsWith("android")).count() > 0
+                )
                 print( "// " );
             if( m.getExceptionTypes().length >0 )
                 print( "throws "+m.getExceptionTypes() );
